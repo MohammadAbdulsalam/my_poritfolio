@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Portfolio — محمد حسان عبدالسلام</title>
+    <script>
+      window.tailwind = window.tailwind || {};
+      tailwind.config = { darkMode: 'class' };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes floatY { 0% { transform: translateY(0) } 50% { transform: translateY(-6px)} 100% { transform: translateY(0)} }
+      .animate-fade-up { animation: fadeInUp .7s ease-out both; }
+      .animate-float { animation: floatY 4s ease-in-out infinite; }
+      .gradient-text { background: linear-gradient(90deg,#2563eb,#06b6d4); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .card { border-radius: 1.5rem; border: 1px solid rgb(226,232,240); background: #1e293b; transition: transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease; }
+      .card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.14); }
+      .dark .card { border-color: rgb(51,65,85); background: rgb(30,41,59); }
+      .card-inner { background: #ffffff; color: #0f172a; border-radius: 1rem; }
+      .dark .card-inner { background: transparent; color: inherit; }
+      .btn { border-radius: 1rem; padding: .5rem 1rem; font-size: .9rem; transition: transform .2s, box-shadow .2s, background .2s; display:inline-flex; align-items:center; gap:.5rem }
+      .btn-solid { background: #2563eb; color: #fff; } .btn-solid:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(37,99,235,.35)}
+      .btn-outline { border: 1px solid rgba(0,0,0,.2);} .dark .btn-outline{border-color: rgba(255,255,255,.2);} .btn-outline:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.18);}
+      .shadow-soft { box-shadow: 0 10px 28px rgba(0,0,0,.08); }
+      body { background: #ffffff; }
+      .phone-ltr { direction: ltr; unicode-bidi: bidi-override; padding: .1rem .35rem; border-radius: .6rem; transition: box-shadow .3s ease; }
+      .phone:hover .phone-ltr { box-shadow: 0 0 0 0 rgba(253,29,146,0), 0 0 24px 4px rgba(124,58,237,.35); }
+      .phone svg { width: 18px; height: 18px; }
+      .phone:hover svg { transform: scale(1.06); transition: transform .25s ease; }
+    </style>
+  </head>
+  <body class="text-slate-900 dark:bg-slate-900 dark:text-slate-100 min-h-screen transition-colors">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+      function getInitialDark() { try { const s = localStorage.getItem('theme'); if(s==='dark') return true; if(s==='light') return false; } catch(e){} return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+      const WHATSAPP_NUMBER = "966537726393"; const PHONE_DISPLAY = "+966 53 772 6393";
+      const i18n = {
+        ar: { dir:"rtl", name:"محمد حسان عبدالسلام", title:"مهندس نظم معلومات • مطوّر تطبيقات ويب وموبايل", nav_about:"نبذة", nav_skills:"المهارات", nav_projects:"المشاريع", nav_contact:"تواصل", cta_projects:"شاهد مشاريعي", cta_contact:"تواصل معي", cta_whatsapp:"واتساب", cv_btn:"مشاهدة السيرة (PDF)", location:"الرياض، المملكة العربية السعودية", projects_h:"المشاريع", demo:"معرض الصور", code:"الكود", about_h:"نبذة", about_p:"خريج <b>هندسة تقانات المعلومات – ذكاء اصطناعي</b> من جامعة القلمون (2019–2024). لدي خبرة عملية كفريلانسر منذ 2021 في تطوير الويب (HTML/CSS) وسنة+ في تطوير تطبيقات Flutter.", contact_h:"تواصل", footer:(y)=>`© ${y} محمد حسان عبدالسلام — جميع الحقوق محفوظة.`, wa_msg:"السلام عليكم محمد، اطلعت على البورتفوليو وأرغب بالتواصل بشأن مشروع." },
+        en: { dir:"ltr", name:"Mohammad Hassan Abdulsalam", title:"IT Engineer • Web & Mobile App Developer", nav_about:"About", nav_skills:"Skills", nav_projects:"Projects", nav_contact:"Contact", cta_projects:"View Projects", cta_contact:"Contact Me", cta_whatsapp:"WhatsApp", cv_btn:"Look at CV (PDF)", location:"Riyadh, Saudi Arabia", projects_h:"Projects", demo:"Gallery", code:"Source Code", about_h:"About", about_p:"B.Sc. in Information Technology Engineering — AI (2019–2024). Freelancing since 2021.", contact_h:"Contact", footer:(y)=>`© ${y} Mohammad Hassan Abdulsalam — All rights reserved.`, wa_msg:"Hi Mohammad, I viewed your portfolio and would like to discuss a project." }
+      };
+      const projects = (t) => [
+        { key:"tasbeeh", title:t.dir==='rtl'?'تطبيق مسبّحتي – My Tasbeeh App':'My Tasbeeh App', role:"Flutter • Dart • SQLite", description:t.dir==='rtl'?'تطبيق إسلامي شامل للأذكار والمسبحة والقرآن الكريم.':'Islamic app for adhkar, tasbeeh & Quran.', images:["assets/tasbeeh/cover.png"], gallery:"tasbeeh_gallery.html" },
+        { key:"ecommerce", title:"E‑Commerce App", role:"Flutter • SQLite", description:t.dir==='rtl'?'متجر إلكتروني كامل':'Full e‑commerce app', images:["assets/ecommerce/cover.png"], gallery:"ecommerce_gallery.html", video:true },
+        { key:"news", title:"News App with Localization", role:"Flutter • REST API • Localization", description:t.dir==='rtl'?'تطبيق أخبار متعدد اللغات':'Multi‑language news app', images:["assets/news/cover.png"], gallery:"news_gallery.html" },
+        { key:"tracking", title:"Tracking Order System (Google Maps)", role:"Flutter • Firebase • Google Maps API", description:t.dir==='rtl'?'نظام تتبّع لحظي':'Real‑time tracking', images:["assets/tracking/cover.png"], gallery:"tracking_gallery.html", video:true },
+        { key:"gesture", title:"Hand Gesture Recognition (AI)", role:"Python • OpenCV • TensorFlow", description:t.dir==='rtl'?'تعرّف على إيماءات اليد':'Hand gesture recognition', images:["assets/gesture/cover.png"], gallery:"gesture_gallery.html" },
+        { key:"emotion", title:"Emotion Tracking System (AI)", role:"Python • OpenCV • TensorFlow", description:t.dir==='rtl'?'تتبّع العواطف':'Emotion analysis', images:["assets/emotion/cover.png"], gallery:"emotion_gallery.html" },
+      ];
+      function PhoneIcon(){ return (<svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24"><stop stopColor="#fd1d92"/><stop offset="1" stopColor="#7c3aed"/></linearGradient></defs><path d="M21 16.5v3a1.5 1.5 0 0 1-1.64 1.49 18 18 0 0 1-7.86-3.06A17.5 17.5 0 0 1 5.06 11.5 18 18 0 0 1 2 3.64 1.5 1.5 0 0 1 3.49 2h3A1.5 1.5 0 0 1 8 3.27c.17.69.4 1.36.68 2a1.5 1.5 0 0 1-.34 1.62L7.28 8a14.5 14.5 0 0 0 8.72 8.72l1.11-1.06a1.5 1.5 0 0 1 1.62-.34c.65.28 1.32.51 2 .68A1.5 1.5 0 0 1 21 16.5Z" stroke="url(#g)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>); }
+      const Phone = () => (<a href="tel:+966537726393" className="phone inline-flex items-center gap-2"><span className="w-[18px] h-[18px]"><PhoneIcon/></span><span className="phone-ltr">+966 53 772 6393</span></a>);
+      function App(){
+        const [dark,setDark] = useState(getInitialDark()); const [lang,setLang]=useState('ar'); const t=i18n[lang]; const waURL=`https://wa.me/966537726393?text=${encodeURIComponent(t.wa_msg)}`;
+        useEffect(()=>{document.documentElement.setAttribute('dir',t.dir);document.documentElement.setAttribute('lang',lang)},[lang,t.dir]);
+        useEffect(()=>{const root=document.documentElement; if(dark){root.classList.add('dark');localStorage.setItem('theme','dark')} else {root.classList.remove('dark');localStorage.setItem('theme','light')}},[dark]);
+        return (<div className="font-sans">
+          <header className="sticky top-0 z-50 backdrop-blur bg-white/85 dark:bg-slate-900/70 border-b border-slate-200 dark:border-slate-800">
+            <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4 justify-between">
+              <div className="flex items-center gap-3"><div className="text-lg font-extrabold gradient-text">{t.name}</div><div className="text-xs text-slate-500 dark:text-slate-400">{t.title}</div></div>
+              <nav className="hidden md:flex items-center gap-6 text-sm"><a href="#about">{t.nav_about}</a><a href="#skills">{t.nav_skills}</a><a href="#projects">{t.nav_projects}</a><a href="#contact">{t.nav_contact}</a></nav>
+              <div className="flex items-center gap-2">
+                <a href={waURL} target="_blank" className="btn btn-outline">💬 {t.cta_whatsapp}</a>
+                <button className="btn btn-outline" onClick={()=>setLang(lang==='ar'?'en':'ar')}>{lang==='ar'?'EN':'AR'}</button>
+                <button className="btn btn-outline" onClick={()=>setDark(!dark)}>{dark?'☀️':'🌙'}</button>
+                <a href="assets/MohammadAS-CV.pdf" className="btn btn-solid">{t.cv_btn}</a>
+              </div>
+            </div>
+          </header>
+
+          <section className="max-w-6xl mx-auto px-4 py-12 animate-fade-up">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-extrabold leading-relaxed">بورتفوليو مشاريع Flutter وذكاء اصطناعي</h1>
+                <p className="mt-4 text-slate-700 dark:text-slate-300">معرض مبسّط يعرض أهم التطبيقات التي عملت عليها مع روابط للمعرض التفصيلي لكل مشروع.</p>
+                <div className="mt-4 flex gap-3"><a href="#projects" className="btn btn-solid">{t.cta_projects}</a><a href="#contact" className="btn btn-outline">{t.cta_contact}</a></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="projects" className="max-w-6xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold mb-6">{t.projects_h}</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projects(t).map((p,i)=>(
+                <div key={i} className="card overflow-hidden"><img src={p.images[0]} onError={(e)=>{e.currentTarget.style.display='none'}} className="w-full h-44 object-cover"/><div className="p-2"><div className="card-inner p-4"><h3 className="font-semibold">{p.title}</h3><div className="text-xs text-slate-600 mt-1">{p.role}</div><p className="text-sm text-slate-700 mt-3">{p.description}</p><div className="flex gap-3 mt-2"><a href={p.gallery} className="text-blue-600 hover:underline text-sm">{t.demo}</a></div></div></div></div>
+              ))}
+            </div>
+          </section>
+
+          <section id="contact" className="max-w-6xl mx-auto px-4 py-12">
+            <div className="card p-2"><div className="card-inner p-6"><h2 className="text-2xl font-bold mb-4">{t.contact_h}</h2><div className="grid md:grid-cols-2 gap-4 text-sm"><a href="mailto:mohmmdabdulsalam@gmail.com">✉️ mohmmdabdulsalam@gmail.com</a><div><Phone/></div><a href={waURL} target="_blank">💬 WhatsApp</a></div></div></div>
+          </section>
+
+          <footer className="max-w-6xl mx-auto px-4 py-10 text-center text-xs text-slate-500 dark:text-slate-400">{t.footer(new Date().getFullYear())}</footer>
+        </div>);
+      }
+      const root = ReactDOM.createRoot(document.getElementById('root')); root.render(<App/>);
+    </script>
+  </body>
+</html>

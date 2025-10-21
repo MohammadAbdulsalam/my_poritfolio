@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracking Order System (Google Maps)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body{background:#0f172a;color:#e2e8f0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+  .wrap{max-width:1080px;margin:0 auto;padding:16px}
+  .bar{display:flex;justify-content:space-between;align-items:center;margin:8px 0 14px}
+  .btn{border:1px solid #334155;border-radius:.8rem;padding:.5rem .9rem;display:inline-flex;gap:.5rem;align-items:center}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.25)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+  .thumb{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:.75rem;border:1px solid #1f2937;background:#0b1220}
+  .player{width:100%;aspect-ratio:16/9;border-radius:.75rem;background:#0b1220;border:1px solid #1f2937}
+  .title{font-weight:800;font-size:1.4rem}
+  .sub{color:#9ca3af;font-size:.92rem}
+  @media(prefers-color-scheme:light){
+    body{background:#fff;color:#0f172a}
+    .thumb,.player{background:#fff;border-color:#e2e8f0}
+    .btn{border-color:#cbd5e1}
+    .sub{color:#475569}
+  }
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:50}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:92vw;max-height:84vh;border-radius:.75rem}
+  .navbtn{position:absolute;top:50%;transform:translateY(-50%);font-size:28px;color:#fff;padding:.4rem .7rem;border-radius:.6rem;background:rgba(255,255,255,.12)}
+  .navbtn:hover{background:rgba(255,255,255,.2)}
+  .nav-prev{right:12px}.nav-next{left:12px}
+  .close{position:absolute;top:12px;right:12px;font-size:26px;color:#fff;background:rgba(255,255,255,.12);padding:.3rem .6rem;border-radius:.6rem}
+  .close:hover{background:rgba(255,255,255,.2)}
+</style>
+</head>
+<body><div class='wrap'><div class='bar'><div><div class='title'>Tracking Order System (Google Maps)</div><div class='sub'>معرض صور المشروع</div></div><div style='display:flex;gap:.5rem'><a class='btn' href='index_with_galleries.html'>⟵ رجوع</a></div></div><video id='v0' class='player' controls></video><div style='height:10px'></div><div class='grid'><img class='thumb' data-base='assets/tracking/cover' alt='image 1'><img class='thumb' data-base='assets/tracking/1' alt='image 2'><img class='thumb' data-base='assets/tracking/2' alt='image 3'></div>
+<div id="lb" class="lightbox"><button class="close">✕</button><button class="navbtn nav-prev">❯</button><img id="lbimg"><button class="navbtn nav-next">❮</button></div>
+<script>
+ (function(){
+   const exts = ['png','jpg','jpeg','webp'];
+   function loadSmart(img, base){
+     let i=0;
+     function tryNext(){ if(i>=exts.length){ img.alt='no image'; return; } img.src = base+'.'+exts[i++]; }
+     img.onerror = tryNext; tryNext();
+   }
+   document.querySelectorAll('img[data-base]').forEach(im => loadSmart(im, im.dataset.base));
+
+   // video
+   const v = document.getElementById('v0');
+   if(v){
+     const vexts = ['mp4','webm','mov'];
+     let i=0; function next(){ if(i>=vexts.length){ v.outerHTML='<div class="player" style="display:flex;align-items:center;justify-content:center;color:#94a3b8">No video</div>'; return; } v.src = 'assets/tracking/splash.'+vexts[i++]; }
+     v.onerror = next; next();
+   }
+
+   // lightbox
+   const thumbs = Array.from(document.querySelectorAll('img[data-base]'));
+   const lb = document.getElementById('lb'), lbimg = document.getElementById('lbimg');
+   if(thumbs.length){
+     let idx=0;
+     const openAt = i=>{ idx=i; lbimg.src = thumbs[idx].src; lb.classList.add('open'); };
+     const step = d=>{ idx=(idx+d+thumbs.length)%thumbs.length; lbimg.src = thumbs[idx].src; };
+     thumbs.forEach((im,i)=> im.addEventListener('click', ()=>openAt(i)));
+     document.querySelector('.nav-prev').addEventListener('click', ()=>step(-1));
+     document.querySelector('.nav-next').addEventListener('click', ()=>step(1));
+     document.querySelector('.close').addEventListener('click', ()=>lb.classList.remove('open'));
+     lb.addEventListener('click', e=>{ if(e.target===lb) lb.classList.remove('open'); });
+     window.addEventListener('keydown', e=>{ if(!lb.classList.contains('open')) return; if(e.key==='ArrowLeft') step(1); if(e.key==='ArrowRight') step(-1); if(e.key==='Escape') lb.classList.remove('open'); });
+   }
+ })();
+</script>
+</div></body></html>
